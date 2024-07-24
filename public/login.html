@@ -1,0 +1,32 @@
+<!-- public/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Login</title>
+</head>
+<body class="loginBody">
+    <div class="login-container">
+        <h1 class="login">Login</h1>
+        <p><b>Username:</b> '<span style="color: #2f82ed;">admin</span>' & <b>Password:</b> '<span style="color: #2f82ed;">password123</span>'</p>
+
+        <form action="/login" method="POST">
+            <input class="loginInput" type="text" name="username" placeholder="Username" required>
+            <input class="loginInput" type="password" name="password" placeholder="Password" required>
+            <button class="btn" type="submit">Login</button>
+            <p class="errors-message" id="error-message" style="display: none;">Invalid credentials</p>
+        </form>
+        <div class="register-link">
+            Visit HomePage, without login <a href="/">click here</a>.
+        </div>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

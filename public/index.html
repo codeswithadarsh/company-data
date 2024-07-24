@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Look-up-a-company!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Look-up-a-company!</h1>
+    </header>
+
+    <div id="login-prompt" style="display: none;">
+
+        <div class="notification">
+            <div class="notification-icon"></div>
+            <div class="notification-text">
+                Please log in to access the company data. You cannot access it without logging in. 
+                <span class="icons"></span>
+            </div>
+        </div>
+
+        <p class="loginMessage">Please login to access the data.</p>
+        <a href="/login.html"><button class="homeLogin">Login</button></a>
+    </div>
+
+    <div class="main-container" id="main-container">
+          
+        <!-- This will be shown to authenticated users -->
+        <aside class="sidebar" id="sidebar" style="display: none;">
+            <button id="view-data">View Data</button>
+            <a href="/logout">Logout</a>
+        </aside>
+        <main class="content" id="content" style="display: none;">
+            <div id="table-container" style="display: none;">
+                <input type="text" id="search" placeholder="Search">
+                <table id="company-table" class="display">
+                    <thead>
+                        <tr>
+                            <th>Entity</th>
+                            <th>Sector</th>
+                            <th>Email</th>
+                            <th>Incorporation</th>
+                            <th>Address</th>
+                            <th>Revenue</th>
+                            <th>Website</th>
+                            <th>Verified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="total-records"></div>
+            </div>
+        </main>
+    </div>
+    <script>
+        $(document).ready(function() {
+            // Check if the user is authenticated
+            $.get('/is-authenticated', function(response) {
+                if (response.authenticated) {
+                    $('#sidebar, #content').show();
+                } else {
+                    $('#login-prompt').show();
+                }
+            });
+
+            // Initialize DataTable without data
+            const table = $('#company-table').DataTable({
+                pageLength: 10,
+                columns: [
+                    { data: 'entity' },
+                    { data: 'sector' },
+                    { data: 'email' },
+                    { data: 'incorporation' },
+                    { data: 'address' },
+                    { data: 'revenue' },
+                    { data: 'website' },
+                    { data: 'is_verified' }
+                ]
+            });
+
+            // Fetch and display data when the View Data button is clicked
+            $('#view-data').click(function() {
+                $('#table-container').show();  // Show the table container
+
+                // Fetch data from the server
+                $.get('/api/companies', { search: $('#search').val() }, function(data) {
+                    table.clear().rows.add(data).draw();
+                    $('#total-records').text('Total records: ' + data.length);
+                });
+            });
+
+            // Trigger data reload on search input change
+            $('#search').keyup(function() {
+                if ($('#table-container').is(':visible')) {
+                    // Only reload data if the table is already visible
+                    $.get('/api/companies', { search: $('#search').val() }, function(data) {
+                        table.clear().rows.add(data).draw();
+                        $('#total-records').text('Total records: ' + data.length);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
