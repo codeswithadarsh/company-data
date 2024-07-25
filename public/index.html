@@ -15,6 +15,8 @@
         <h1>Look-up-a-company!</h1>
     </header>
 
+    <!-- ----------------HomePage Login and Noification----------- -->
+
     <div id="login-prompt" style="display: none;">
 
         <div class="notification">
@@ -25,13 +27,39 @@
             </div>
         </div>
 
+        <div class="container">
+            <div class="latest-class">
+                <p class="class-title">PLEASE LOGIN USING USERNAME: <span>admin</span> AND PASSWORD: <span>password123</span></p>
+            </div>
+            <div class="card">
+                <div class="date">
+                    <div class="date-box">
+                        <p class="month" id="month"></p>
+                        <p class="day" id="day"></p>
+                    </div>
+                </div>
+                <div class="content">
+                    <p class="task-title">Please login to access the details</p>
+                    <p class="status">Not logged in yet!</p>
+                </div>
+                <div class="action">
+                    <a href="/login.html"><button class="solve-btn">Login &rarr;</button></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="authDetails">
+            <p><strong>User</strong>: admin || <strong>Password</strong>: password123</p>
+        </div>
+
         <p class="loginMessage">Please login to access the data.</p>
-        <a href="/login.html"><button class="homeLogin">Login</button></a>
+        <a href="/login.html"><button class="homeLogin">Login</button></a> -->
     </div>
+
+    <!-- ----------------HomePage Login and Noification End----------- -->
 
     <div class="main-container" id="main-container">
           
-        <!-- This will be shown to authenticated users -->
         <aside class="sidebar" id="sidebar" style="display: none;">
             <button id="view-data">View Data</button>
             <a href="/logout">Logout</a>
@@ -85,9 +113,9 @@
                 ]
             });
 
-            // Fetch and display data when the View Data button is clicked
+           
             $('#view-data').click(function() {
-                $('#table-container').show();  // Show the table container
+                $('#table-container').show();
 
                 // Fetch data from the server
                 $.get('/api/companies', { search: $('#search').val() }, function(data) {
@@ -96,7 +124,7 @@
                 });
             });
 
-            // Trigger data reload on search input change
+           
             $('#search').keyup(function() {
                 if ($('#table-container').is(':visible')) {
                     // Only reload data if the table is already visible
@@ -108,5 +136,25 @@
             });
         });
     </script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const date = new Date();
+        const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+        const monthElement = document.getElementById('month');
+        const dayElement = document.getElementById('day');
+
+        if (monthElement && dayElement) {
+            monthElement.textContent = monthNames[date.getMonth()];
+            dayElement.textContent = date.getDate();
+        } else {
+            console.error("Date elements not found");
+        }
+    });
+</script>
+
 </body>
 </html>
